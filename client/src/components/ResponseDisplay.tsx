@@ -44,8 +44,7 @@ export default function ResponseDisplay({ response, status }: ResponseDisplayPro
   return (
     <Card>
       <CardContent className="p-6">
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-lg font-medium text-neutral-800">Response</h2>
+        <div className="flex justify-end mb-4">
           <Button
             variant="ghost"
             size="sm"
