@@ -1,7 +1,7 @@
-import { useRef } from "react";
+import { useRef, useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Copy, Code } from "lucide-react";
+import { Copy, Code, Loader2 } from "lucide-react";
 import { formatJson } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
 
