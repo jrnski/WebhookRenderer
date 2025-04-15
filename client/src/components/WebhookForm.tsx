@@ -30,12 +30,18 @@ export default function WebhookForm({ setResponse, setStatus }: WebhookFormProps
     setStatus({ type: "none", message: "" });
     
     try {
-      // Call our proxy endpoint instead of the external webhook directly
-      const response = await apiRequest(
-        "POST",
-        "/api/webhook",
-        data
-      );
+      // Call our proxy endpoint with GET method and query parameter
+      const encodedText = encodeURIComponent(data.text);
+      const response = await fetch(`/api/webhook?text=${encodedText}`, {
+        method: "GET",
+        headers: {
+          "Accept": "application/json",
+        },
+      });
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error ${response.status}`);
+      }
       
       const responseData = await response.json();
       setResponse(responseData);

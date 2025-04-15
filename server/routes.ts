@@ -7,26 +7,25 @@ import fetch from "node-fetch";
 const WEBHOOK_URL = "https://n8n.srv762943.hstgr.cloud/webhook/10eebb49-8820-4d71-a6cc-a919c88d3723";
 
 export async function registerRoutes(app: Express): Promise<Server> {
-  // Create a proxy endpoint for the webhook
-  app.post("/api/webhook", async (req: Request, res: Response) => {
+  // Create a proxy endpoint for the webhook using GET method
+  app.get("/api/webhook", async (req: Request, res: Response) => {
     try {
-      // Validate the incoming request
-      const validationResult = webhookRequestSchema.safeParse(req.body);
+      // Get text from the query parameter
+      const text = req.query.text as string;
       
-      if (!validationResult.success) {
+      if (!text) {
         return res.status(400).json({ 
           error: "Invalid request data", 
-          details: validationResult.error.format() 
+          message: "Text parameter is required" 
         });
       }
       
-      // Forward the request to the actual webhook
-      const response = await fetch(WEBHOOK_URL, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(req.body),
+      // Construct the URL with the text as a query parameter
+      const webhookUrlWithParams = `${WEBHOOK_URL}?text=${encodeURIComponent(text)}`;
+      
+      // Forward the request to the actual webhook using GET
+      const response = await fetch(webhookUrlWithParams, {
+        method: "GET",
       });
       
       // Get the response from the webhook
