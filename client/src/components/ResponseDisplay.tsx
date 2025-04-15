@@ -68,18 +68,24 @@ export default function ResponseDisplay({ response, status }: ResponseDisplayPro
           </div>
         )}
 
-        <div className="bg-neutral-50 rounded-md p-4 h-64 overflow-auto font-mono text-sm border border-neutral-200">
+        <div className="space-y-4">
           {!hasResponse ? (
-            <div className="flex flex-col items-center justify-center h-full text-neutral-400">
+            <div className="bg-neutral-50 rounded-md p-4 h-64 overflow-auto flex flex-col items-center justify-center text-neutral-400">
               <Code className="h-8 w-8 mb-2" />
-              <p>JSON response will appear here</p>
+              <p>Response will appear here</p>
+            </div>
+          ) : response.output && response.output.response ? (
+            <div>
+              <h3 className="text-md font-medium mb-2">Response:</h3>
+              <div 
+                className="bg-white rounded-md p-4 border border-neutral-200 prose prose-sm max-w-none min-h-[200px]"
+                dangerouslySetInnerHTML={{ __html: response.output.response }}
+              />
             </div>
           ) : (
-            <pre 
-              ref={jsonRef} 
-              dangerouslySetInnerHTML={{ __html: formatJson(response) }}
-              className="whitespace-pre-wrap break-words"
-            />
+            <div className="bg-neutral-50 rounded-md p-4 h-64 overflow-auto">
+              <p className="text-neutral-600">No response content available</p>
+            </div>
           )}
         </div>
       </CardContent>
