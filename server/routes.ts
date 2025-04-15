@@ -4,7 +4,7 @@ import { storage } from "./storage";
 import { webhookRequestSchema } from "../shared/schema";
 import fetch from "node-fetch";
 
-const WEBHOOK_URL = "https://n8n.srv762943.hstgr.cloud/webhook/10eebb49-8820-4d71-a6cc-a919c88d3723";
+const WEBHOOK_URL = "https://n8n.srv762943.hstgr.cloud/webhook-test/10eebb49-8820-4d71-a6cc-a919c88d3723";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Create a proxy endpoint for the webhook using GET method
@@ -28,11 +28,31 @@ export async function registerRoutes(app: Express): Promise<Server> {
         method: "GET",
       });
       
-      // Get the response from the webhook
-      const data = await response.json();
+      // Check if the response is successful
+      if (!response.ok) {
+        return res.status(response.status).json({
+          error: `Webhook returned status ${response.status}`,
+          message: response.statusText
+        });
+      }
+      
+      // Get the response text first to handle possible non-JSON responses
+      const responseText = await response.text();
+      
+      // Try to parse the response as JSON
+      let data;
+      try {
+        data = responseText ? JSON.parse(responseText) : { success: true, message: "Request processed" };
+      } catch (err) {
+        // If parsing fails, return the raw text
+        return res.status(200).json({
+          raw_response: responseText,
+          note: "The webhook did not return valid JSON"
+        });
+      }
       
       // Send the webhook's response back to the client
-      return res.status(response.status).json(data);
+      return res.status(200).json(data);
     } catch (error) {
       console.error("Webhook forwarding error:", error);
       return res.status(500).json({ 
