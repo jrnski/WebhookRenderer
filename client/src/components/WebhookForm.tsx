@@ -30,9 +30,10 @@ export default function WebhookForm({ setResponse, setStatus }: WebhookFormProps
     setStatus({ type: "none", message: "" });
     
     try {
+      // Call our proxy endpoint instead of the external webhook directly
       const response = await apiRequest(
         "POST",
-        "https://n8n.srv762943.hstgr.cloud/webhook/10eebb49-8820-4d71-a6cc-a919c88d3723",
+        "/api/webhook",
         data
       );
       
