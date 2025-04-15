@@ -27,9 +27,14 @@ export default function WebhookForm({ setResponse, setStatus }: WebhookFormProps
   
   const onSubmit = async (data: { text: string }) => {
     setIsLoading(true);
+    // Set loading state by setting response to null and status to "none"
+    setResponse(null);
     setStatus({ type: "none", message: "" });
     
     try {
+      // Add a slight delay to see the loading animation (can be removed in production)
+      await new Promise(resolve => setTimeout(resolve, 3000));
+      
       // Call our proxy endpoint with GET method and query parameter
       const encodedText = encodeURIComponent(data.text);
       const response = await fetch(`/api/webhook?text=${encodedText}`, {
