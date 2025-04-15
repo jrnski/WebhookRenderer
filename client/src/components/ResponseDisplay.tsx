@@ -1,7 +1,6 @@
 import { useRef } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Copy, Code } from "lucide-react";
 import { formatJson } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
@@ -56,16 +55,6 @@ export default function ResponseDisplay({ response, status }: ResponseDisplayPro
             Copy
           </Button>
         </div>
-
-        {status.type !== "none" && (
-          <div className="mb-4">
-            <Alert variant={status.type === "error" ? "destructive" : "default"}>
-              <AlertDescription>
-                {status.message}
-              </AlertDescription>
-            </Alert>
-          </div>
-        )}
 
         <div className="space-y-4">
           {!hasResponse ? (
