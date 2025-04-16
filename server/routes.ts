@@ -5,7 +5,7 @@ import { webhookRequestSchema } from "../shared/schema";
 import fetch from "node-fetch";
 
 const WEBHOOK_URL =
-  "https://n8n.srv762943.hstgr.cloud/webhook/10eebb49-8820-4d71-a6cc-a919c88d3723";
+  "https://yourn8nwebhook";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Create a proxy endpoint for the webhook using GET method
