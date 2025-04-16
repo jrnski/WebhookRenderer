@@ -108,17 +108,32 @@ export default function ResponseDisplay({ response, status, isLoading }: Respons
               <Code className="h-8 w-8 mb-2" />
               <p>Response will appear here</p>
             </div>
-          ) : response.output && response.output.response ? (
+          ) : (
             <div>
               <h3 className="text-md font-medium mb-2">Response:</h3>
-              <div 
-                className="bg-white rounded-md p-4 border border-neutral-200 prose prose-sm max-w-none min-h-[200px]"
-                dangerouslySetInnerHTML={{ __html: response.output.response }}
-              />
-            </div>
-          ) : (
-            <div className="bg-neutral-50 rounded-md p-4 h-64 overflow-auto">
-              <p className="text-neutral-600">No response content available</p>
+              {response.output && response.output.response ? (
+                <div 
+                  className="bg-white rounded-md p-4 border border-neutral-200 prose prose-sm max-w-none min-h-[200px]"
+                  dangerouslySetInnerHTML={{ __html: response.output.response }}
+                />
+              ) : response.error ? (
+                <div className="bg-red-50 rounded-md p-4 border border-red-200 text-red-800 min-h-[200px]">
+                  <h4 className="font-semibold mb-2">Error:</h4>
+                  <p>{response.error}</p>
+                  {response.message && <p className="mt-2">{response.message}</p>}
+                  {response.hint && (
+                    <div className="mt-4 p-3 bg-yellow-50 border border-yellow-200 rounded text-sm">
+                      <strong>Hint:</strong> {response.hint}
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <div className="bg-white rounded-md p-4 border border-neutral-200 prose prose-sm max-w-none min-h-[200px]">
+                  <pre className="text-sm font-mono whitespace-pre-wrap">
+                    {JSON.stringify(response, null, 2)}
+                  </pre>
+                </div>
+              )}
             </div>
           )}
         </div>
