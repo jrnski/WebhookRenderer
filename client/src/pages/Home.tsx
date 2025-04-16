@@ -4,6 +4,7 @@ import { useState } from "react";
 
 export default function Home() {
   const [response, setResponse] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [status, setStatus] = useState<{
     type: "error" | "success" | "none";
     message: string;
@@ -22,12 +23,14 @@ export default function Home() {
 
         <WebhookForm 
           setResponse={setResponse} 
-          setStatus={setStatus} 
+          setStatus={setStatus}
+          setIsLoading={setIsLoading}
         />
         
         <ResponseDisplay 
           response={response} 
           status={status}
+          isLoading={isLoading}
         />
       </div>
     </div>

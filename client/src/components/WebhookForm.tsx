@@ -13,10 +13,11 @@ import { Loader2 } from "lucide-react";
 interface WebhookFormProps {
   setResponse: (response: any) => void;
   setStatus: (status: { type: "error" | "success" | "none"; message: string }) => void;
+  setIsLoading: (isLoading: boolean) => void;
 }
 
-export default function WebhookForm({ setResponse, setStatus }: WebhookFormProps) {
-  const [isLoading, setIsLoading] = useState(false);
+export default function WebhookForm({ setResponse, setStatus, setIsLoading }: WebhookFormProps) {
+  const [isSubmitting, setIsSubmitting] = useState(false);
   
   const form = useForm({
     resolver: zodResolver(webhookRequestSchema),
@@ -26,6 +27,7 @@ export default function WebhookForm({ setResponse, setStatus }: WebhookFormProps
   });
   
   const onSubmit = async (data: { text: string }) => {
+    setIsSubmitting(true);
     setIsLoading(true);
     // Set loading state by setting response to null and status to "none"
     setResponse(null);
@@ -62,6 +64,7 @@ export default function WebhookForm({ setResponse, setStatus }: WebhookFormProps
         message: error instanceof Error ? `Request failed: ${error.message}` : "Request failed",
       });
     } finally {
+      setIsSubmitting(false);
       setIsLoading(false);
     }
   };
@@ -93,10 +96,10 @@ export default function WebhookForm({ setResponse, setStatus }: WebhookFormProps
             <div className="flex justify-end">
               <Button 
                 type="submit" 
-                disabled={isLoading}
+                disabled={isSubmitting}
                 className="bg-primary hover:bg-primary/90"
               >
-                {isLoading ? (
+                {isSubmitting ? (
                   <>
                     <span>Sending...</span>
                     <Loader2 className="ml-2 h-4 w-4 animate-spin" />

@@ -11,14 +11,14 @@ interface ResponseDisplayProps {
     type: "error" | "success" | "none";
     message: string;
   };
+  isLoading: boolean;
 }
 
-export default function ResponseDisplay({ response, status }: ResponseDisplayProps) {
+export default function ResponseDisplay({ response, status, isLoading }: ResponseDisplayProps) {
   const jsonRef = useRef<HTMLPreElement>(null);
   const { toast } = useToast();
   const hasResponse = response !== null;
   const [loadingMessage, setLoadingMessage] = useState<string>("Initializing connection...");
-  const [showLoading, setShowLoading] = useState<boolean>(false);
   
   // Array of loading messages that will change every second
   const loadingMessages = [
@@ -34,7 +34,7 @@ export default function ResponseDisplay({ response, status }: ResponseDisplayPro
   useEffect(() => {
     let interval: NodeJS.Timeout;
     
-    if (showLoading) {
+    if (isLoading) {
       let index = 0;
       // Change message every second
       interval = setInterval(() => {
@@ -46,17 +46,7 @@ export default function ResponseDisplay({ response, status }: ResponseDisplayPro
     return () => {
       if (interval) clearInterval(interval);
     };
-  }, [showLoading]);
-  
-  // Update loading state when response state changes
-  useEffect(() => {
-    // No response but status type is "none" means we're in loading state
-    if (response === null && status.type === "none") {
-      setShowLoading(true);
-    } else {
-      setShowLoading(false);
-    }
-  }, [response, status]);
+  }, [isLoading]);
   
   const handleCopyResponse = () => {
     if (!hasResponse || !jsonRef.current) return;
@@ -97,7 +87,7 @@ export default function ResponseDisplay({ response, status }: ResponseDisplayPro
         </div>
 
         <div className="space-y-4">
-          {showLoading ? (
+          {isLoading ? (
             <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-md p-8 h-64 overflow-auto flex flex-col items-center justify-center">
               <div className="relative">
                 <Loader2 className="h-12 w-12 text-primary animate-spin mb-4" />
